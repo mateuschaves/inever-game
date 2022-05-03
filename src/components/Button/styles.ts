@@ -7,7 +7,7 @@ export const Container = styled.Pressable`
   padding: 16px;
   justify-content: center;
   align-items: center;
-  margin: 8px 0 8px 0;
+  margin: 8px 0 60px 0;
 `;
 
 export const Title = styled.Text`

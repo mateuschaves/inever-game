@@ -10,7 +10,7 @@ import { persistor, store } from '~/store';
 export default function App() {
   return (
     <Provider store={store}>
-      <ToastManager position="bottom" />
+      <ToastManager position="top" />
       <PersistGate loading={null} persistor={persistor}>
         <Home />
       </PersistGate>

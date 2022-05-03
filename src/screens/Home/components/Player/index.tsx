@@ -1,14 +1,17 @@
+/* eslint-disable react/require-default-props */
 import React from 'react';
 
 import { Container, PlayerName } from './styles';
 
 interface PlayerProps {
-    name: string
+    name: string;
+    // eslint-disable-next-line no-unused-vars
+    onLongPress: (player: string) => void;
 }
 
-export default function Player({ name }: PlayerProps) {
+export default function Player({ name, onLongPress }: PlayerProps) {
   return (
-    <Container>
+    <Container onLongPress={() => onLongPress(name)}>
       <PlayerName>{name}</PlayerName>
     </Container>
   );

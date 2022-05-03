@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-import { sayHiReducer as sayHi } from './Greeting/SayHi';
+import { playerReducer as player } from './Player/Player';
 
-const createRootReducers = () => combineReducers({
-  sayHi,
+const createRootReducers = combineReducers({
+  player,
 });
 
 export default createRootReducers;
