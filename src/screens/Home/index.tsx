@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import {
-  Alert, Keyboard, TouchableWithoutFeedback, Vibration,
+  Alert, Keyboard, TouchableWithoutFeedback, Vibration, FlatList
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -25,18 +25,19 @@ export default function Home() {
   const { players } = useSelector<RootState, InitialPlayersState>((state) => state.player);
 
   function handleAddPlayerName() {
-    setPlayerName('');
-
     try {
-      if (players.find((player) => player === playerName)) throw new Error('Jogador já existe');
+      if (players.find((player) => player === playerName)) throw new Error('Jogador já existe 🤔');
 
-      if (!playerName.trim()) throw new Error('Jogador inválido');
+      if (!playerName.trim()) throw new Error('Jogador inválido 🤥');
+
+      if (players.length >= 5) throw new Error('Já tem muita gente 😬');
 
       dispatch(playerActions.addPlayer({ name: playerName }));
     } catch (error: any) {
-      Keyboard.dismiss();
+      handleKeyboardDimiss();
       alertRef?.current?.showAlert(error.message);
     }
+    setPlayerName('');
   }
 
   function handleKeyboardDimiss() {
@@ -82,12 +83,14 @@ export default function Home() {
               title="Adicionar"
               onPress={() => handleAddPlayerName()}
             />
-            {
-          players.map((player) => (
-            <Player key={player} name={player} onLongPress={() => handleRemovePlayerName(player)} />
-          ))
-        }
 
+            <FlatList
+              data={players}
+              renderItem={({ item }) => (
+                <Player key={item} name={item} onLongPress={() => handleRemovePlayerName(item)} />
+              )}
+              keyExtractor={(item, index) => `${item}-${index}`}
+            />
           </Form>
           <MyAlert
             ref={alertRef}
