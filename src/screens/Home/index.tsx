@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { Alert, Vibration } from 'react-native';
+import React, { useState, useRef } from 'react';
+import {
+  Alert, Keyboard, TouchableWithoutFeedback, Vibration,
+} from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+
 import Button from '~/components/Button';
 import TextField from '~/components/TextField';
-import { Toast } from 'toastify-react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import MyAlert from '~/components/Alert';
 import Player from './components/Player';
 
 import {
@@ -17,6 +20,8 @@ export default function Home() {
 
   const [playerName, setPlayerName] = useState('');
 
+  const alertRef = useRef<any>();
+
   const { players } = useSelector<RootState, InitialPlayersState>((state) => state.player);
 
   function handleAddPlayerName() {
@@ -29,10 +34,13 @@ export default function Home() {
 
       dispatch(playerActions.addPlayer({ name: playerName }));
     } catch (error: any) {
-      Toast.error(error.message, {
-        position: 'bottom',
-      });
+      Keyboard.dismiss();
+      alertRef?.current?.showAlert(error.message);
     }
+  }
+
+  function handleKeyboardDimiss() {
+    Keyboard.dismiss();
   }
 
   function handleRemovePlayerName(player: string) {
@@ -51,36 +59,43 @@ export default function Home() {
   }
 
   return (
-    <Container>
-      <TitleContainer>
-        <Title>
-          Quem vai beber ?
-        </Title>
-      </TitleContainer>
+    <TouchableWithoutFeedback onPress={() => handleKeyboardDimiss()}>
+      <Container>
+        <>
+          <TitleContainer>
+            <Title>
+              Quem vai beber ?
+            </Title>
+          </TitleContainer>
 
-      <Form>
-        <TextField
-          autoFocus
-          keyboardType="name-phone-pad"
-          returnKeyType="next"
-          autoCorrect={false}
-          autoCapitalize="none"
-          value={playerName}
-          onChangeText={setPlayerName}
-        />
+          <Form>
+            <TextField
+              keyboardType="name-phone-pad"
+              returnKeyType="next"
+              autoCorrect={false}
+              autoCapitalize="none"
+              value={playerName}
+              onChangeText={setPlayerName}
+            />
 
-        <Button
-          title="Adicionar"
-          onPress={() => handleAddPlayerName()}
-        />
-        {
+            <Button
+              title="Adicionar"
+              onPress={() => handleAddPlayerName()}
+            />
+            {
           players.map((player) => (
             <Player key={player} name={player} onLongPress={() => handleRemovePlayerName(player)} />
           ))
         }
 
-      </Form>
-
-    </Container>
+          </Form>
+          <MyAlert
+            ref={alertRef}
+            backgroundColor="#fff"
+            textColor="#000"
+          />
+        </>
+      </Container>
+    </TouchableWithoutFeedback>
   );
 }
