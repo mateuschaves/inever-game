@@ -64,7 +64,7 @@ export default function Home() {
         <>
           <TitleContainer>
             <Title>
-              Quem vai beber ?
+              Quem vai jogar ?
             </Title>
           </TitleContainer>
 
